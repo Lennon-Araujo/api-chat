@@ -13,7 +13,7 @@ import { FindUsersQueryDto } from './dtos/find-users-query.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
- 
+
   async findUsers(
     queryDto: FindUsersQueryDto,
   ): Promise<{ users: User[]; total: number }> {
@@ -73,6 +73,14 @@ export class UserRepository extends Repository<User> {
         throw new InternalServerErrorException('Erro ao salvar usuário',);
       }
     }
+  }
+
+  async changePassword(id: string, password: string) {
+    const user = await this.findOne(id);
+    user.salt = await bcrypt.genSalt();
+    user.password = await this.hashPassword(password, user.salt);
+    user.recoverToken = null;
+    await user.save();
   }
 
   async checkCredentials(credentialsDto: CredentialsDto): Promise<User> {
