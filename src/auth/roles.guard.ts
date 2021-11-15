@@ -3,7 +3,7 @@ import { Reflector } from "@nestjs/core";
 import { Observable } from "rxjs";
 
 @Injectable()
-export class RoleGuard implements CanActivate {
+export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) { }
 
   canActivate(
